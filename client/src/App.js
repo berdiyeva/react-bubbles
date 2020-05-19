@@ -7,6 +7,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import "./styles.scss";
 
 function App() {
+	const [colorList, setColorList] = useState([]);
 	return (
 		<Router>
 			<div className='nav'>
@@ -23,6 +24,7 @@ function App() {
 					<PrivateRoute exact path='/protected' component={BubblePage} />
 					<Route path='/login' component={Login} />
 					<Route component={Login} />
+					<Route component={BubblePage} />
 				</Switch>
 			</div>
 		</Router>
