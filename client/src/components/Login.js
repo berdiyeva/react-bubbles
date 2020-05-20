@@ -1,64 +1,59 @@
-import React from "react";
-import { axiosWithAuth } from "../utils/axiosWithAuth";
+import React, { useState } from "react";
 
-// make a post request to retrieve a token from the api
-// when you have handled the token, navigate to the BubblePage route
+import { AxiosWithAuth } from "../utils/AxiosWithAuth";
 
-class Login extends React.Component {
-	state = {
-		credentials: {
-			username: "",
-			password: "",
-		},
-	};
-
-	handleChange = (e) => {
-		this.setState({
-			credentials: {
-				...this.state.credentials,
-				[e.target.name]: e.target.value,
-			},
+const Login = (props) => {
+	const [credentials, setCredentilas] = useState({
+		username: "",
+		password: "",
+	});
+	const handleChange = (e) => {
+		setCredentilas({
+			...credentials,
+			[e.target.name]: e.target.value,
 		});
 	};
-
-	login = (e) => {
+	const login = (e) => {
 		e.preventDefault();
-		axiosWithAuth()
-			.post("/api/login", this.state.credentials)
+		console.log(credentials);
+		AxiosWithAuth()
+			.post("/login", credentials)
 			.then((res) => {
-				console.log(res);
-				window.localStorage.setItem("token", res.data.payload);
-				this.props.history.push("/protected");
+				localStorage.setItem("token", res.data.payload);
+				props.history.push("/bubbles");
 			})
 			.catch((err) => {
-				console.log("Err is: ", err);
+				console.log(err);
 			});
 	};
-
-	render() {
-		return (
-			<div className='login-form'>
-				<h1>Welcome to the Bubble App!</h1>
-				<form onSubmit={this.login}>
-					<input
-						type='text'
-						name='username'
-						value={this.state.credentials.username}
-						onChange={this.handleChange}
-						className='form-in'
-					/>
-					<input
-						type='password'
-						name='password'
-						value={this.state.credentials.password}
-						onChange={this.handleChange}
-						className='form-in'
-					/>
-					<button className='form-btn'>Log in</button>
-				</form>
-			</div>
-		);
-	}
-}
+	return (
+		<section className='loginForm'>
+			<h1>Welcome to the Bubble App!</h1>
+			<form onSubmit={login}>
+				<input
+					type='text'
+					name='username'
+					placeholder='User Name'
+					value={credentials.username}
+					onChange={handleChange}
+					className='form'
+				/>
+				<br />
+				<input
+					type='password'
+					name='password'
+					placeholder='Password'
+					value={credentials.password}
+					onChange={handleChange}
+					className='form'
+				/>
+				<br />
+				<button type='submit' className='form-btn'>
+					Log In
+				</button>
+			</form>
+		</section>
+	);
+};
 
 export default Login;
